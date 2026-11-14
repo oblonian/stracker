@@ -2,4 +2,5 @@
     <string name="app_name">stracker</string>
     <string name="collector_channel_name">Tracking</string>
     <string name="collector_channel_description">The quiet notice Android requires while stracker records your day</string>
+    <string name="collector_notification_text">stracker is tracking</string>
 </resources>
