@@ -6,15 +6,15 @@ plugins {
 }
 
 android {
-    namespace = "com.ostrava.app"
+    namespace = "com.oblonian.stracker"
     compileSdk = 35
 
     defaultConfig {
-        applicationId = "com.ostrava.app"
+        applicationId = "com.oblonian.stracker"
         minSdk = 26
         targetSdk = 35
-        versionCode = 4
-        versionName = "1.3.0"
+        versionCode = 1
+        versionName = "0.1.0"
     }
 
     signingConfigs {
@@ -93,7 +93,6 @@ dependencies {
     implementation(libs.play.services.location)
     implementation(libs.osmdroid)
     implementation(libs.androidx.work.runtime.ktx)
-    implementation(libs.androidx.health.connect)
 
     testImplementation(libs.junit)
     testImplementation(libs.robolectric)

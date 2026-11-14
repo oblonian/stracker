@@ -19,5 +19,5 @@ dependencyResolutionManagement {
     }
 }
 
-rootProject.name = "Ostrava"
+rootProject.name = "stracker"
 include(":app")

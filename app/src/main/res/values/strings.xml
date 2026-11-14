@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Ostrava</string>
-    <string name="tracking_channel_name">Activity tracking</string>
-    <string name="tracking_channel_description">Live stats while recording an activity</string>
+    <string name="app_name">stracker</string>
+    <string name="collector_channel_name">Tracking</string>
+    <string name="collector_channel_description">The quiet notice Android requires while stracker records your day</string>
 </resources>
