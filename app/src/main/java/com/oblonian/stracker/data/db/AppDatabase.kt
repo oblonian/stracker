@@ -32,6 +32,8 @@ abstract class AppDatabase : RoomDatabase() {
 
     abstract fun buttonDao(): ButtonDao
 
+    abstract fun backupDao(): BackupDao
+
     companion object {
         @Volatile
         private var instance: AppDatabase? = null

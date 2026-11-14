@@ -1,6 +1,20 @@
 package com.oblonian.stracker
 
+import android.net.Uri
 import android.os.Bundle
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
+import androidx.compose.material3.AlertDialog
+import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
+import androidx.compose.ui.platform.LocalContext
+import com.oblonian.stracker.export.BackupManager
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
@@ -92,13 +106,45 @@ private fun StrackerNavHost() {
         composable(Routes.DAY_APPS, arguments = dateArg) { AppUsageScreen(onBack = { navController.popBackStack() }) }
         composable(Routes.DAY_MAP, arguments = dateArg) { DayMapScreen(onBack = { navController.popBackStack() }) }
         composable(Routes.SETTINGS) {
+            val context = LocalContext.current
+            val app = context.applicationContext as StrackerApp
+            val scope = rememberCoroutineScope()
+            var confirmRestore by remember { mutableStateOf<Uri?>(null) }
+            val exportLauncher = rememberLauncherForActivityResult(ActivityResultContracts.CreateDocument("application/json")) { uri ->
+                uri ?: return@rememberLauncherForActivityResult
+                scope.launch(Dispatchers.IO) {
+                    runCatching {
+                        context.contentResolver.openOutputStream(uri)?.use { BackupManager.export(app.container.database, app.container.settingsRepository, it) }
+                    }
+                }
+            }
+            val importLauncher = rememberLauncherForActivityResult(ActivityResultContracts.OpenDocument()) { uri -> confirmRestore = uri }
             SettingsScreen(
                 onBack = { navController.popBackStack() },
                 onWorkingHours = { navController.navigate(Routes.SETTINGS_HOURS) },
                 onPlaces = { navController.navigate(Routes.SETTINGS_PLACES) },
                 onButtons = { navController.navigate(Routes.SETTINGS_BUTTONS) },
-                onBackup = {}, onRestore = {},
+                onBackup = { exportLauncher.launch("stracker-backup-${LocalDate.now()}.json") },
+                onRestore = { importLauncher.launch(arrayOf("application/json", "text/plain", "*/*")) },
             )
+            confirmRestore?.let { uri ->
+                AlertDialog(
+                    onDismissRequest = { confirmRestore = null },
+                    title = { Text("Restore from backup?") },
+                    text = { Text("Replace everything on this phone with the backup?") },
+                    confirmButton = {
+                        TextButton(onClick = {
+                            confirmRestore = null
+                            scope.launch(Dispatchers.IO) {
+                                runCatching {
+                                    context.contentResolver.openInputStream(uri)?.use { BackupManager.import(app.container.database, app.container.settingsRepository, it) }
+                                }
+                            }
+                        }) { Text("Replace") }
+                    },
+                    dismissButton = { TextButton(onClick = { confirmRestore = null }) { Text("Cancel") } },
+                )
+            }
         }
         composable(Routes.SETTINGS_HOURS) { WorkingHoursScreen(onBack = { navController.popBackStack() }) }
         composable(Routes.SETTINGS_PLACES) { PlacesScreen(onBack = { navController.popBackStack() }) }
