@@ -12,4 +12,3 @@ captures/
 *.keystore
 # Public sideload signing key, committed on purpose (see app/build.gradle.kts).
 !app/sideload.keystore
-.superpowers/
