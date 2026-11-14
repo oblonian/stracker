@@ -13,7 +13,7 @@ import com.oblonian.stracker.ui.settings.SettingsViewModel
 object AppViewModelProvider {
     val Factory = viewModelFactory {
         initializer {
-            MainViewModel(settingsRepository = app().container.settingsRepository)
+            MainViewModel(app())
         }
         initializer {
             CalendarViewModel(app().container.dayRepository, app().container.clock)
