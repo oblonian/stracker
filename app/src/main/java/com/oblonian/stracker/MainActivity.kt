@@ -15,12 +15,17 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import androidx.navigation.navArgument
 import androidx.navigation.compose.rememberNavController
 import com.oblonian.stracker.ui.AppViewModelProvider
 import com.oblonian.stracker.ui.MainViewModel
 import com.oblonian.stracker.ui.calendar.CalendarScreen
+import com.oblonian.stracker.ui.day.AppUsageScreen
+import com.oblonian.stracker.ui.day.DayMapScreen
+import com.oblonian.stracker.ui.day.DayScreen
 import com.oblonian.stracker.ui.onboarding.OnboardingScreen
 import com.oblonian.stracker.ui.theme.StrackerTheme
 import java.time.LocalDate
@@ -71,7 +76,16 @@ private fun StrackerNavHost() {
                 onSettings = { navController.navigate(Routes.SETTINGS) },
             )
         }
-        composable(Routes.DAY) { Placeholder("day") }
+        val dateArg = listOf(navArgument("date") { type = NavType.StringType })
+        composable(Routes.DAY, arguments = dateArg) { entry ->
+            DayScreen(
+                onNavigateDay = { d -> navController.navigate(Routes.day(d)) { popUpTo(Routes.CALENDAR); launchSingleTop = true } },
+                onApps = { navController.navigate(Routes.dayApps(LocalDate.parse(entry.arguments!!.getString("date")))) },
+                onMap = { navController.navigate(Routes.dayMap(LocalDate.parse(entry.arguments!!.getString("date")))) },
+            )
+        }
+        composable(Routes.DAY_APPS, arguments = dateArg) { AppUsageScreen(onBack = { navController.popBackStack() }) }
+        composable(Routes.DAY_MAP, arguments = dateArg) { DayMapScreen(onBack = { navController.popBackStack() }) }
         composable(Routes.SETTINGS) { Placeholder("settings") }
     }
 }

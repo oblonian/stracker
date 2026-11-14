@@ -101,3 +101,15 @@ fun formatWeight(kg: Float, imperial: Boolean): String =
     else String.format(Locale.US, "%.0f kg", kg)
 
 const val POUNDS_PER_KG = 2.20462f
+
+/** "7h 10m", "45m" or "0m" — the day view's totals. */
+fun formatHoursMinutes(millis: Long): String {
+    val minutes = millis / 60_000
+    val h = minutes / 60
+    val m = minutes % 60
+    return if (h > 0) "${h}h ${m}m" else "${m}m"
+}
+
+/** "07:05" in the given zone. */
+fun formatClock(instant: Instant, zone: ZoneId): String =
+    DateTimeFormatter.ofPattern("HH:mm", Locale.US).format(instant.atZone(zone))

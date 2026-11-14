@@ -43,3 +43,14 @@ val LEGEND = listOf(
     EpisodeType.SLEEP, EpisodeType.WORK, EpisodeType.PHONE,
     EpisodeType.EXERCISE, EpisodeType.TRAVEL, EpisodeType.EATING,
 )
+
+val EventType.emoji: String
+    get() = when (this) {
+        EventType.HEADACHE -> "🤕"
+        EventType.FEVER -> "🌡️"
+        EventType.MEAL -> "🍽️"
+        EventType.COFFEE -> "☕"
+        EventType.WASHROOM -> "🚽"
+        EventType.WATER -> "💧"
+        EventType.CUSTOM -> "•"
+    }
