@@ -35,6 +35,8 @@ data class Episode(
     val placeId: Long? = null,
     val label: String? = null,
     val detail: Detail? = null,
+    /** The key inference gave an automatic episode before overrides were applied. */
+    val autoKey: String? = null,
 )
 
 /** Stable identity of an automatic episode, so a correction survives re-running inference. */

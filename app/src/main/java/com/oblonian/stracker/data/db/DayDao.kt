@@ -26,6 +26,10 @@ interface DayDao {
     @Query("SELECT * FROM episodes WHERE id = :id")
     suspend fun episode(id: Long): EpisodeEntity?
 
+    /** Episodes touching [from, to); an ongoing one (end NULL) counts as touching. */
+    @Query("SELECT * FROM episodes WHERE start < :to AND (`end` IS NULL OR `end` > :from) ORDER BY start")
+    fun episodesOverlapping(from: Long, to: Long): Flow<List<EpisodeEntity>>
+
     @Query("SELECT * FROM episodes WHERE `end` IS NULL AND source = 'MANUAL' ORDER BY start")
     fun ongoingManualEpisodes(): Flow<List<EpisodeEntity>>
 
@@ -67,6 +71,9 @@ interface DayDao {
 
     @Query("SELECT * FROM events WHERE id = :id")
     suspend fun event(id: Long): EventEntity?
+
+    @Query("SELECT * FROM events WHERE time >= :from AND time < :to ORDER BY time")
+    fun eventsBetween(from: Long, to: Long): Flow<List<EventEntity>>
 
     @Insert
     suspend fun insertEvent(row: EventEntity): Long

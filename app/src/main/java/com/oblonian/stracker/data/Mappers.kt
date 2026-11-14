@@ -53,14 +53,14 @@ fun LocationEntity.toDomain() = LocationSample(Instant.ofEpochMilli(time), lat, 
 fun Episode.toEntity() = EpisodeEntity(
     id = id, type = type.name, customName = customName, start = start.toEpochMilli(), end = end?.toEpochMilli(),
     day = day.toString(), source = source.name, confidence = confidence.name, placeId = placeId, label = label,
-    severity = detail?.severity, note = detail?.note,
+    severity = detail?.severity, note = detail?.note, autoKey = autoKey,
 )
 
 fun EpisodeEntity.toDomain() = Episode(
     id = id, type = EpisodeType.valueOf(type), customName = customName, start = Instant.ofEpochMilli(start),
     end = end?.let(Instant::ofEpochMilli), day = LocalDate.parse(day), source = Source.valueOf(source),
     confidence = Confidence.valueOf(confidence), placeId = placeId, label = label,
-    detail = detail(severity, note),
+    detail = detail(severity, note), autoKey = autoKey,
 )
 
 fun Event.toEntity() = EventEntity(

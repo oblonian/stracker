@@ -63,6 +63,8 @@ data class EpisodeEntity(
     val label: String? = null,
     val severity: Int? = null,
     val note: String? = null,
+    /** For automatic episodes: the key inference gave it before any correction, so overrides match. */
+    val autoKey: String? = null,
 )
 
 @Entity(tableName = "events", indices = [Index("day"), Index("time")])

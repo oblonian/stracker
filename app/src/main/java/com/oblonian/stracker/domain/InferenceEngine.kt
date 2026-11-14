@@ -34,7 +34,7 @@ class InferenceEngine(private val settings: InferenceSettings) {
         }
 
         val manualSpans = manual.map { Span(it.start, it.end ?: now) }
-        val clipped = auto.flatMap { e -> clipAround(e, manualSpans) }
+        val clipped = auto.flatMap { e -> clipAround(e, manualSpans) }.map { it.copy(autoKey = it.key()) }
         val corrected = applyOverrides(clipped, overrides)
 
         return DayData(
@@ -57,7 +57,7 @@ class InferenceEngine(private val settings: InferenceSettings) {
         if (overrides.isEmpty()) return episodes
         val byKey = overrides.associateBy { it.episodeKey }
         return episodes.mapNotNull { e ->
-            val o = byKey[e.key()] ?: return@mapNotNull e
+            val o = byKey[e.autoKey ?: e.key()] ?: return@mapNotNull e
             if (o.deleted) return@mapNotNull null
             e.copy(
                 type = o.newType ?: e.type,
