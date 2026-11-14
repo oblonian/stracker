@@ -18,7 +18,7 @@ object AppViewModelProvider {
             CalendarViewModel(app().container.dayRepository, app().container.clock)
         }
         initializer {
-            DayViewModel(createSavedStateHandle(), app().container.dayRepository, app().container.clock)
+            DayViewModel(createSavedStateHandle(), app().container.dayRepository, app().container.clock, app().container.buttonRepository)
         }
     }
 }

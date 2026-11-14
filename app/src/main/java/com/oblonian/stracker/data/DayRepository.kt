@@ -156,6 +156,8 @@ class DayRepository(
 
     fun ongoing(): Flow<List<Episode>> = dayDao.ongoingManualEpisodes().map { rows -> rows.map { it.toDomain() } }
 
+    suspend fun ongoingOnce(): List<Episode> = dayDao.ongoingManualEpisodesOnce().map { it.toDomain() }
+
     /** Manual episodes are edited in place; automatic ones get an override and the day is recomputed. */
     suspend fun updateEpisode(episode: Episode) {
         if (episode.source == Source.MANUAL) {
@@ -190,6 +192,10 @@ class DayRepository(
         }
         recompute(episode.day)
     }
+
+    suspend fun episode(id: Long): Episode? = dayDao.episode(id)?.toDomain()
+
+    suspend fun event(id: Long): Event? = dayDao.event(id)?.toDomain()
 
     suspend fun updateEvent(event: Event) = dayDao.updateEvent(event.toEntity())
 
