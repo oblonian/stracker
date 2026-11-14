@@ -8,10 +8,8 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -27,6 +25,10 @@ import com.oblonian.stracker.ui.day.AppUsageScreen
 import com.oblonian.stracker.ui.day.DayMapScreen
 import com.oblonian.stracker.ui.day.DayScreen
 import com.oblonian.stracker.ui.onboarding.OnboardingScreen
+import com.oblonian.stracker.ui.settings.ButtonsScreen
+import com.oblonian.stracker.ui.settings.PlacesScreen
+import com.oblonian.stracker.ui.settings.SettingsScreen
+import com.oblonian.stracker.ui.settings.WorkingHoursScreen
 import com.oblonian.stracker.ui.theme.StrackerTheme
 import java.time.LocalDate
 
@@ -36,6 +38,9 @@ object Routes {
     const val DAY_APPS = "day/{date}/apps"
     const val DAY_MAP = "day/{date}/map"
     const val SETTINGS = "settings"
+    const val SETTINGS_HOURS = "settings/hours"
+    const val SETTINGS_PLACES = "settings/places"
+    const val SETTINGS_BUTTONS = "settings/buttons"
 
     fun day(date: LocalDate) = "day/$date"
     fun dayApps(date: LocalDate) = "day/$date/apps"
@@ -86,14 +91,17 @@ private fun StrackerNavHost() {
         }
         composable(Routes.DAY_APPS, arguments = dateArg) { AppUsageScreen(onBack = { navController.popBackStack() }) }
         composable(Routes.DAY_MAP, arguments = dateArg) { DayMapScreen(onBack = { navController.popBackStack() }) }
-        composable(Routes.SETTINGS) { Placeholder("settings") }
-    }
-}
-
-/** Stands in for screens that later tasks build. */
-@Composable
-private fun Placeholder(name: String) {
-    Box(Modifier.fillMaxSize().background(MaterialTheme.colorScheme.background), contentAlignment = Alignment.Center) {
-        Text(name, style = MaterialTheme.typography.titleMedium)
+        composable(Routes.SETTINGS) {
+            SettingsScreen(
+                onBack = { navController.popBackStack() },
+                onWorkingHours = { navController.navigate(Routes.SETTINGS_HOURS) },
+                onPlaces = { navController.navigate(Routes.SETTINGS_PLACES) },
+                onButtons = { navController.navigate(Routes.SETTINGS_BUTTONS) },
+                onBackup = {}, onRestore = {},
+            )
+        }
+        composable(Routes.SETTINGS_HOURS) { WorkingHoursScreen(onBack = { navController.popBackStack() }) }
+        composable(Routes.SETTINGS_PLACES) { PlacesScreen(onBack = { navController.popBackStack() }) }
+        composable(Routes.SETTINGS_BUTTONS) { ButtonsScreen(onBack = { navController.popBackStack() }) }
     }
 }

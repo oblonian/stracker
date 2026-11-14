@@ -1,8 +1,10 @@
 package com.oblonian.stracker.collect
 
+import android.app.AppOpsManager
 import android.app.Application
 import android.app.usage.UsageEvents
 import android.content.Context
+import android.os.Process
 import androidx.room.Room
 import androidx.test.core.app.ApplicationProvider
 import androidx.work.ListenableWorker
@@ -14,6 +16,7 @@ import org.junit.Assert.assertTrue
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.robolectric.RobolectricTestRunner
+import org.robolectric.Shadows.shadowOf
 import org.robolectric.annotation.Config
 import java.time.Instant
 
@@ -63,6 +66,9 @@ class UsagePollerTest {
     @Test
     fun `missing permission records nothing and does not throw`() = runBlocking {
         val context: Context = ApplicationProvider.getApplicationContext()
+        shadowOf(context.getSystemService(AppOpsManager::class.java))
+            .setMode(AppOpsManager.OPSTR_GET_USAGE_STATS, Process.myUid(), context.packageName, AppOpsManager.MODE_IGNORED)
+        assertTrue(!UsagePoller.hasPermission(context))
         val db = Room.inMemoryDatabaseBuilder(context, AppDatabase::class.java).allowMainThreadQueries().build()
         val worker = TestListenableWorkerBuilder<UsagePollWorker>(context)
             .setWorkerFactory(UsagePollWorker.factory(db.signalDao()))

@@ -4,6 +4,7 @@ import android.content.Context
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.booleanPreferencesKey
+import androidx.datastore.preferences.core.longPreferencesKey
 import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.core.stringPreferencesKey
 import androidx.datastore.preferences.preferencesDataStore
@@ -13,6 +14,7 @@ import com.oblonian.stracker.domain.WorkingHours
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 import java.time.DayOfWeek
+import java.time.Instant
 import java.time.LocalDate
 import java.time.LocalTime
 import java.time.ZoneId
@@ -27,6 +29,7 @@ data class UserSettings(
     val sleepWindowStart: LocalTime = Thresholds.SLEEP_WINDOW_START,
     val sleepWindowEnd: LocalTime = Thresholds.SLEEP_WINDOW_END,
     val lastInferenceDay: LocalDate? = null,
+    val lastBackupAt: Instant? = null,
 ) {
     fun toInference(zone: ZoneId) = InferenceSettings(workingHours, sleepWindowStart, sleepWindowEnd, zone)
 
@@ -45,6 +48,7 @@ class SettingsRepository(private val context: Context) {
         val SLEEP_WINDOW_START = stringPreferencesKey("sleep_window_start")
         val SLEEP_WINDOW_END = stringPreferencesKey("sleep_window_end")
         val LAST_INFERENCE_DAY = stringPreferencesKey("last_inference_day")
+        val LAST_BACKUP_AT = longPreferencesKey("last_backup_at")
         fun hours(day: DayOfWeek) = stringPreferencesKey("hours_${day.name.lowercase()}")
     }
 
@@ -59,6 +63,7 @@ class SettingsRepository(private val context: Context) {
             sleepWindowStart = prefs[Keys.SLEEP_WINDOW_START]?.let(LocalTime::parse) ?: Thresholds.SLEEP_WINDOW_START,
             sleepWindowEnd = prefs[Keys.SLEEP_WINDOW_END]?.let(LocalTime::parse) ?: Thresholds.SLEEP_WINDOW_END,
             lastInferenceDay = prefs[Keys.LAST_INFERENCE_DAY]?.let(LocalDate::parse),
+            lastBackupAt = prefs[Keys.LAST_BACKUP_AT]?.let(Instant::ofEpochMilli),
         )
     }
 
@@ -77,6 +82,8 @@ class SettingsRepository(private val context: Context) {
     }
 
     suspend fun setLastInferenceDay(day: LocalDate) = context.dataStore.edit { it[Keys.LAST_INFERENCE_DAY] = day.toString() }
+
+    suspend fun setLastBackupAt(at: Instant) = context.dataStore.edit { it[Keys.LAST_BACKUP_AT] = at.toEpochMilli() }
 
     private fun parseHours(raw: String): WorkingHours? {
         if (raw == OFF) return null

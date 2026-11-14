@@ -8,9 +8,7 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
-import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FilterChip
@@ -23,9 +21,7 @@ import androidx.compose.material3.SegmentedButtonDefaults
 import androidx.compose.material3.SingleChoiceSegmentedButtonRow
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
-import androidx.compose.material3.TimePicker
 import androidx.compose.material3.rememberModalBottomSheetState
-import androidx.compose.material3.rememberTimePickerState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -44,6 +40,8 @@ import com.oblonian.stracker.domain.EventType
 import com.oblonian.stracker.domain.Source
 import com.oblonian.stracker.domain.formatClock
 import com.oblonian.stracker.ui.components.Pill
+import com.oblonian.stracker.ui.components.TimePickerField
+import java.time.LocalTime
 import com.oblonian.stracker.ui.theme.color
 import com.oblonian.stracker.ui.theme.displayName
 import com.oblonian.stracker.ui.theme.emoji
@@ -128,9 +126,12 @@ fun DetailContent(
 
         // Times
         Row(horizontalArrangement = Arrangement.spacedBy(12.dp)) {
-            TimeField(if (episode != null) "Start" else "Time", start, zone) { it?.let { v -> start = v } }
+            TimePickerField(if (episode != null) "Start" else "Time", start.atZone(zone).toLocalTime(), { start = withTime(start, it, zone) })
             if (episode != null) {
-                TimeField("End", end, zone, allowOngoing = true) { end = it }
+                TimePickerField(
+                    "End", end?.atZone(zone)?.toLocalTime(), { end = withTime(end ?: start, it, zone) },
+                    placeholder = "ongoing", clearLabel = "Ongoing", onClear = { end = null },
+                )
             }
         }
 
@@ -162,35 +163,5 @@ fun DetailContent(
     }
 }
 
-/** A tappable clock time that opens a time picker; "ongoing" when an episode has no end yet. */
-@OptIn(ExperimentalMaterial3Api::class)
-@Composable
-private fun TimeField(label: String, value: Instant?, zone: ZoneId, allowOngoing: Boolean = false, onChange: (Instant?) -> Unit) {
-    var open by remember { mutableStateOf(false) }
-    Column {
-        Text(label, style = MaterialTheme.typography.labelMedium, color = MaterialTheme.colorScheme.onSurfaceVariant)
-        OutlinedButton(onClick = { open = true }) { Text(value?.let { formatClock(it, zone) } ?: "ongoing") }
-    }
-    if (open) {
-        val base = (value ?: Instant.now()).atZone(zone)
-        val state = rememberTimePickerState(initialHour = base.hour, initialMinute = base.minute, is24Hour = true)
-        AlertDialog(
-            onDismissRequest = { open = false },
-            title = { Text(label) },
-            text = { TimePicker(state) },
-            confirmButton = {
-                TextButton(onClick = {
-                    onChange(base.withHour(state.hour).withMinute(state.minute).withSecond(0).withNano(0).toInstant())
-                    open = false
-                }) { Text("OK") }
-            },
-            dismissButton = {
-                Row {
-                    if (allowOngoing) TextButton(onClick = { onChange(null); open = false }) { Text("Ongoing") }
-                    Spacer(Modifier.width(4.dp))
-                    TextButton(onClick = { open = false }) { Text("Cancel") }
-                }
-            },
-        )
-    }
-}
+private fun withTime(base: Instant, time: LocalTime, zone: ZoneId): Instant =
+    base.atZone(zone).withHour(time.hour).withMinute(time.minute).withSecond(0).withNano(0).toInstant()
