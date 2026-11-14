@@ -35,27 +35,12 @@ object SleepInference {
         val range = Span(window.start, window.end)
         val screenOn = Intervals.screenOn(signals.screen, range)
         val still = Intervals.motionStates(signals.motion, range).filter { it.motion == Motion.STILL }.map { it.span }
-        val sleepSpan = mainSleep?.end?.let { Span(mainSleep.start, it) }
+        val cuts = screenOn +
+            listOfNotNull(mainSleep?.end?.let { Span(mainSleep.start, it) }) +
+            WorkInference.workingHourSpans(range, settings)
         return still
-            .flatMap { Intervals.subtract(it, screenOn) }
-            .flatMap { s -> if (sleepSpan == null) listOf(s) else Intervals.subtract(s, listOf(sleepSpan)) }
+            .flatMap { Intervals.subtract(it, cuts) }
             .filter { it.millis >= Thresholds.NAP_MIN.toMillis() }
-            .filter { !intersectsWorkingHours(it, settings) }
             .map { Episode(type = EpisodeType.NAP, start = it.start, end = it.end, day = window.day, source = Source.AUTO, confidence = Confidence.LOW) }
-    }
-
-    private fun intersectsWorkingHours(span: Span, settings: InferenceSettings): Boolean {
-        val start = span.start.atZone(settings.zone)
-        val end = span.end.atZone(settings.zone)
-        var date = start.toLocalDate()
-        while (!date.isAfter(end.toLocalDate())) {
-            val hours = settings.workingHours[date.dayOfWeek]
-            if (hours != null) {
-                val w = Span(date.atTime(hours.start).atZone(settings.zone).toInstant(), date.atTime(hours.end).atZone(settings.zone).toInstant())
-                if (w.overlaps(span)) return true
-            }
-            date = date.plusDays(1)
-        }
-        return false
     }
 }
