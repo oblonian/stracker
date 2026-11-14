@@ -1,0 +1,83 @@
+<style>
+  .phone{width:300px;border:2px solid #444;border-radius:28px;padding:14px 10px;background:#111;color:#eee;font:12px system-ui,sans-serif;margin:auto}
+  .phone h4{margin:2px 0 8px;font-size:14px;text-align:center}
+  .sl{background:#5b6cff}.wk{background:#2fb67c}.ph{background:#ff8a3d}.ex{background:#e84a8a}.tr{background:#9aa0a6}.ea{background:#f2c94c}
+  .tl{display:flex;gap:6px;margin:6px 0}
+  .hr{width:24px;font-size:9px;color:#777;text-align:right}
+  .bar{flex:1;position:relative;height:300px;background:#1c1c1c;border-radius:4px}
+  .bar div{position:absolute;left:0;right:0;border-radius:3px;padding:2px 5px;font-size:9px;color:#000;overflow:hidden;white-space:nowrap}
+  .bar .ev{left:auto;right:4px;width:auto;background:#fff;color:#000;border-radius:10px;padding:1px 5px;font-size:9px}
+  .hrs{position:relative;height:300px;width:24px}
+  .hrs span{position:absolute;right:0;font-size:8px;color:#777}
+  .sum{display:flex;justify-content:space-around;font-size:10px;color:#bbb;margin:8px 0}
+  .sum b{display:block;color:#eee;font-size:12px}
+  .fab{position:relative;text-align:right;margin-top:-26px}
+  .fab span{display:inline-block;width:34px;height:34px;line-height:34px;text-align:center;border-radius:50%;background:#2fb67c;color:#000;font-size:22px;font-weight:bold}
+  .sheet{background:#222;border-radius:14px 14px 0 0;padding:10px 8px 6px;margin:8px -10px -14px}
+  .sheet h5{margin:0 0 8px;font-size:11px;color:#aaa;text-align:center}
+  .grid{display:grid;grid-template-columns:repeat(4,1fr);gap:6px}
+  .grid div{background:#333;border-radius:10px;padding:8px 2px;text-align:center;font-size:9px;color:#ddd}
+  .grid div b{display:block;font-size:20px;margin-bottom:2px}
+  .grid .on{background:#e84a8a;color:#000}
+  .toast{background:#333;border-radius:8px;padding:6px 10px;font-size:10px;margin:8px 0 0;text-align:center;color:#ddd}
+</style>
+
+<h2>Tapping a day, and logging with one tap</h2>
+<p class="subtitle">Left: what opens when you tap a day in the month calendar. Right: the quick-log sheet that pops up from the + button. Do these feel right?</p>
+
+<div class="split">
+
+<div class="mockup"><div class="mockup-header">Day view (tap a day on the calendar)</div><div class="mockup-body">
+<div class="phone"><h4>&#8249; Wed 12 Nov &#8250;</h4>
+<div class="sum"><span>Sleep<b>7h 10m</b></span><span>Phone<b>3h 40m</b></span><span>Work<b>5h 50m</b></span><span>Steps<b>6,420</b></span></div>
+<div class="tl">
+ <div class="hrs"><span style="top:0">0</span><span style="top:75px">6</span><span style="top:150px">12</span><span style="top:225px">18</span><span style="top:292px">24</span></div>
+ <div class="bar">
+  <div class="sl" style="top:0;height:88px">sleep 23:40 &ndash; 07:05</div>
+  <div class="ph" style="top:90px;height:14px">phone</div>
+  <div class="tr" style="top:108px;height:8px"></div>
+  <div class="wk" style="top:118px;height:48px">work (lab)</div>
+  <div class="ea" style="top:166px;height:12px">lunch</div>
+  <div class="wk" style="top:180px;height:52px">work (lab)</div>
+  <div class="ex" style="top:236px;height:16px">walk 2.1 km</div>
+  <div class="ph" style="top:260px;height:28px">phone</div>
+  <div class="sl" style="top:292px;height:8px"></div>
+  <span class="ev" style="top:120px">headache</span>
+  <span class="ev" style="top:200px">&#9749; coffee</span>
+ </div>
+</div>
+<div class="fab"><span>+</span></div>
+</div>
+</div></div>
+
+<div class="mockup"><div class="mockup-header">Quick log (after tapping +)</div><div class="mockup-body">
+<div class="phone"><h4>&#8249; Wed 12 Nov &#8250;</h4>
+<div class="sum" style="opacity:.3"><span>Sleep<b>7h 10m</b></span><span>Phone<b>3h 40m</b></span><span>Work<b>5h 50m</b></span><span>Steps<b>6,420</b></span></div>
+<div style="height:120px;opacity:.3;background:#1c1c1c;border-radius:4px"></div>
+<div class="sheet">
+<h5>Log now &middot; tap once</h5>
+<div class="grid">
+ <div class="on"><b>&#129301;</b>headache</div>
+ <div><b>&#127777;</b>fever</div>
+ <div><b>&#129656;</b>period</div>
+ <div><b>&#129440;</b>sick</div>
+ <div><b>&#127869;</b>meal</div>
+ <div><b>&#9749;</b>coffee</div>
+ <div><b>&#128701;</b>washroom</div>
+ <div><b>&#128167;</b>water</div>
+ <div><b>&#128170;</b>exercise</div>
+ <div><b>&#128214;</b>study</div>
+ <div><b>&#128164;</b>nap</div>
+ <div><b>&#10133;</b>custom</div>
+</div>
+<div class="toast">Headache logged at 14:32 &nbsp;&middot;&nbsp; <u>add details</u> &nbsp;&middot;&nbsp; <u>undo</u></div>
+</div>
+</div>
+</div></div>
+
+</div>
+
+<div class="options" data-multiselect>
+ <div class="option" data-choice="ok" onclick="toggleSelect(this)"><div class="letter">&#10003;</div><div class="content"><h3>Looks right</h3><p>Keep this direction.</p></div></div>
+ <div class="option" data-choice="change" onclick="toggleSelect(this)"><div class="letter">?</div><div class="content"><h3>Change something</h3><p>Tell me in the terminal what's off.</p></div></div>
+</div>

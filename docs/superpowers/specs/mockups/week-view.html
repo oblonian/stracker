@@ -1,0 +1,99 @@
+<style>
+  .phone{width:300px;border:2px solid #444;border-radius:28px;padding:14px 10px;background:#111;color:#eee;font:12px system-ui,sans-serif;margin:auto}
+  .phone h4{margin:2px 0 8px;font-size:14px;text-align:center}
+  .legend{display:flex;flex-wrap:wrap;gap:6px;justify-content:center;margin:8px 0 2px;font-size:10px}
+  .legend span::before{content:"";display:inline-block;width:9px;height:9px;border-radius:2px;margin-right:3px;vertical-align:-1px;background:var(--c)}
+  .sl{--c:#5b6cff;background:#5b6cff}.wk{--c:#2fb67c;background:#2fb67c}.ph{--c:#ff8a3d;background:#ff8a3d}
+  .ex{--c:#e84a8a;background:#e84a8a}.tr{--c:#9aa0a6;background:#9aa0a6}.ea{--c:#f2c94c;background:#f2c94c}
+  .legend span{background:none}
+  /* A: calendar grid */
+  .gridA{display:grid;grid-template-columns:22px repeat(7,1fr);gap:2px}
+  .gridA .hd{text-align:center;font-size:10px;color:#aaa}
+  .col{position:relative;height:240px;background:#1c1c1c;border-radius:3px}
+  .col div{position:absolute;left:1px;right:1px;border-radius:2px}
+  .hrs{position:relative;height:240px;font-size:8px;color:#777}
+  .hrs span{position:absolute;right:2px}
+  /* B: day strips */
+  .row{display:flex;align-items:center;gap:4px;margin:5px 0}
+  .row .d{width:24px;font-size:10px;color:#aaa}
+  .strip{flex:1;display:flex;height:22px;border-radius:3px;overflow:hidden;background:#1c1c1c}
+  .strip div{height:100%}
+  .ax{display:flex;justify-content:space-between;margin-left:28px;font-size:8px;color:#777}
+  /* C: month */
+  .gridC{display:grid;grid-template-columns:repeat(7,1fr);gap:3px}
+  .gridC .hd{text-align:center;font-size:10px;color:#aaa}
+  .cell{height:38px;border-radius:4px;background:#1c1c1c;padding:2px;font-size:9px;color:#aaa;display:flex;flex-direction:column;justify-content:space-between}
+  .bar{display:flex;height:6px;border-radius:2px;overflow:hidden}
+  .note{font-size:10px;color:#aaa;margin-top:8px;text-align:center}
+</style>
+
+<h2>Which weekly view feels like "the map of my week"?</h2>
+<p class="subtitle">Same made-up week in all three. Colours: sleep, work, phone, exercise, travel, eating. Click the one closest to what you pictured (you can pick more than one).</p>
+
+<div class="options" data-multiselect>
+
+<div class="option" data-choice="a" onclick="toggleSelect(this)">
+<div class="letter">A</div>
+<div class="content">
+<h3>Calendar week</h3>
+<p>Like Google Calendar: days side by side, time running down. Familiar; easy to see <i>what</i> happened <i>when</i>.</p>
+<div class="phone"><h4>This week</h4>
+<div class="gridA">
+ <div></div><div class="hd">M</div><div class="hd">T</div><div class="hd">W</div><div class="hd">T</div><div class="hd">F</div><div class="hd">S</div><div class="hd">S</div>
+ <div class="hrs"><span style="top:0">0</span><span style="top:60px">6</span><span style="top:120px">12</span><span style="top:180px">18</span></div>
+ <div class="col"><div class="sl" style="top:0;height:70px"></div><div class="ph" style="top:70px;height:10px"></div><div class="tr" style="top:85px;height:5px"></div><div class="wk" style="top:90px;height:40px"></div><div class="ea" style="top:130px;height:10px"></div><div class="wk" style="top:140px;height:40px"></div><div class="ex" style="top:185px;height:10px"></div><div class="ph" style="top:210px;height:20px"></div><div class="sl" style="top:230px;height:10px"></div></div>
+ <div class="col"><div class="sl" style="top:0;height:72px"></div><div class="ph" style="top:72px;height:12px"></div><div class="wk" style="top:90px;height:40px"></div><div class="ea" style="top:130px;height:10px"></div><div class="wk" style="top:140px;height:40px"></div><div class="ph" style="top:195px;height:40px"></div></div>
+ <div class="col"><div class="sl" style="top:0;height:70px"></div><div class="ph" style="top:70px;height:10px"></div><div class="tr" style="top:85px;height:5px"></div><div class="wk" style="top:90px;height:40px"></div><div class="ea" style="top:130px;height:10px"></div><div class="wk" style="top:140px;height:40px"></div><div class="ex" style="top:185px;height:10px"></div><div class="ph" style="top:210px;height:20px"></div><div class="sl" style="top:230px;height:10px"></div></div>
+ <div class="col"><div class="sl" style="top:10px;height:72px"></div><div class="ph" style="top:82px;height:18px"></div><div class="wk" style="top:100px;height:30px"></div><div class="ea" style="top:130px;height:10px"></div><div class="wk" style="top:140px;height:40px"></div><div class="ph" style="top:190px;height:45px"></div></div>
+ <div class="col"><div class="sl" style="top:0;height:70px"></div><div class="ph" style="top:70px;height:10px"></div><div class="wk" style="top:90px;height:40px"></div><div class="ea" style="top:130px;height:10px"></div><div class="wk" style="top:140px;height:30px"></div><div class="ea" style="top:200px;height:15px"></div><div class="ph" style="top:215px;height:25px"></div></div>
+ <div class="col"><div class="sl" style="top:20px;height:80px"></div><div class="ph" style="top:100px;height:30px"></div><div class="ea" style="top:130px;height:10px"></div><div class="tr" style="top:150px;height:15px"></div><div class="ex" style="top:165px;height:20px"></div><div class="ph" style="top:200px;height:40px"></div></div>
+ <div class="col"><div class="sl" style="top:0;height:95px"></div><div class="ph" style="top:95px;height:45px"></div><div class="ea" style="top:140px;height:10px"></div><div class="ph" style="top:170px;height:50px"></div><div class="sl" style="top:228px;height:12px"></div></div>
+</div>
+<div class="legend"><span class="sl">sleep</span><span class="wk">work</span><span class="ph">phone</span><span class="ex">exercise</span><span class="tr">travel</span><span class="ea">eating</span></div>
+</div>
+</div></div>
+
+<div class="option" data-choice="b" onclick="toggleSelect(this)">
+<div class="letter">B</div>
+<div class="content">
+<h3>Stacked day strips</h3>
+<p>Each day is one 24-hour bar, stacked. Repeating days line up into columns, so <i>how repetitive</i> your life is jumps out at a glance.</p>
+<div class="phone"><h4>This week</h4>
+<div class="ax"><span>0</span><span>6</span><span>12</span><span>18</span><span>24</span></div>
+<div class="row"><span class="d">Mon</span><div class="strip"><div class="sl" style="width:29%"></div><div class="ph" style="width:4%"></div><div style="width:2%"></div><div class="tr" style="width:2.5%"></div><div class="wk" style="width:16.5%"></div><div class="ea" style="width:4%"></div><div class="wk" style="width:16.5%"></div><div style="width:2%"></div><div class="ex" style="width:4%"></div><div style="width:6%"></div><div class="ph" style="width:9%"></div><div class="sl" style="width:4.5%"></div></div></div>
+<div class="row"><span class="d">Tue</span><div class="strip"><div class="sl" style="width:30%"></div><div class="ph" style="width:5%"></div><div style="width:2.5%"></div><div class="wk" style="width:16.5%"></div><div class="ea" style="width:4%"></div><div class="wk" style="width:16.5%"></div><div style="width:6%"></div><div class="ph" style="width:16.5%"></div><div style="width:3%"></div></div></div>
+<div class="row"><span class="d">Wed</span><div class="strip"><div class="sl" style="width:29%"></div><div class="ph" style="width:4%"></div><div style="width:2%"></div><div class="tr" style="width:2.5%"></div><div class="wk" style="width:16.5%"></div><div class="ea" style="width:4%"></div><div class="wk" style="width:16.5%"></div><div style="width:2%"></div><div class="ex" style="width:4%"></div><div style="width:6%"></div><div class="ph" style="width:9%"></div><div class="sl" style="width:4.5%"></div></div></div>
+<div class="row"><span class="d">Thu</span><div class="strip"><div style="width:4%"></div><div class="sl" style="width:30%"></div><div class="ph" style="width:7.5%"></div><div class="wk" style="width:12.5%"></div><div class="ea" style="width:4%"></div><div class="wk" style="width:16.5%"></div><div style="width:4%"></div><div class="ph" style="width:19%"></div></div></div>
+<div class="row"><span class="d">Fri</span><div class="strip"><div class="sl" style="width:29%"></div><div class="ph" style="width:4%"></div><div style="width:4.5%"></div><div class="wk" style="width:16.5%"></div><div class="ea" style="width:4%"></div><div class="wk" style="width:12.5%"></div><div style="width:12.5%"></div><div class="ea" style="width:6%"></div><div class="ph" style="width:11%"></div></div></div>
+<div class="row"><span class="d">Sat</span><div class="strip"><div style="width:8%"></div><div class="sl" style="width:33%"></div><div class="ph" style="width:12.5%"></div><div class="ea" style="width:4%"></div><div style="width:4%"></div><div class="tr" style="width:6%"></div><div class="ex" style="width:8%"></div><div style="width:6%"></div><div class="ph" style="width:16.5%"></div></div></div>
+<div class="row"><span class="d">Sun</span><div class="strip"><div class="sl" style="width:39.5%"></div><div class="ph" style="width:19%"></div><div class="ea" style="width:4%"></div><div style="width:8%"></div><div class="ph" style="width:21%"></div><div class="sl" style="width:5%"></div></div></div>
+<div class="legend"><span class="sl">sleep</span><span class="wk">work</span><span class="ph">phone</span><span class="ex">exercise</span><span class="tr">travel</span><span class="ea">eating</span></div>
+<div class="note">Mon &amp; Wed are near-identical. Weekend sleep shifts ~2 h.</div>
+</div>
+</div></div>
+
+<div class="option" data-choice="c" onclick="toggleSelect(this)">
+<div class="letter">C</div>
+<div class="content">
+<h3>Month calendar, tap a day</h3>
+<p>A normal month grid. Each day shows a tiny summary bar (how the 24 h split up); tap a day to open its timeline.</p>
+<div class="phone"><h4>November</h4>
+<div class="gridC">
+ <div class="hd">M</div><div class="hd">T</div><div class="hd">W</div><div class="hd">T</div><div class="hd">F</div><div class="hd">S</div><div class="hd">S</div>
+ <div class="cell">3<div class="bar"><div class="sl" style="width:33%"></div><div class="wk" style="width:33%"></div><div class="ph" style="width:20%"></div><div class="ex" style="width:14%"></div></div></div>
+ <div class="cell">4<div class="bar"><div class="sl" style="width:33%"></div><div class="wk" style="width:33%"></div><div class="ph" style="width:34%"></div></div></div>
+ <div class="cell">5<div class="bar"><div class="sl" style="width:33%"></div><div class="wk" style="width:33%"></div><div class="ph" style="width:20%"></div><div class="ex" style="width:14%"></div></div></div>
+ <div class="cell">6<div class="bar"><div class="sl" style="width:30%"></div><div class="wk" style="width:28%"></div><div class="ph" style="width:42%"></div></div></div>
+ <div class="cell">7<div class="bar"><div class="sl" style="width:33%"></div><div class="wk" style="width:29%"></div><div class="ph" style="width:28%"></div><div class="ea" style="width:10%"></div></div></div>
+ <div class="cell">8<div class="bar"><div class="sl" style="width:38%"></div><div class="ph" style="width:40%"></div><div class="ex" style="width:12%"></div><div class="tr" style="width:10%"></div></div></div>
+ <div class="cell">9<div class="bar"><div class="sl" style="width:44%"></div><div class="ph" style="width:46%"></div><div class="ea" style="width:10%"></div></div></div>
+ <div class="cell">10<div class="bar"><div class="sl" style="width:33%"></div><div class="wk" style="width:33%"></div><div class="ph" style="width:20%"></div><div class="ex" style="width:14%"></div></div></div>
+ <div class="cell">11<div class="bar"><div class="sl" style="width:31%"></div><div class="wk" style="width:35%"></div><div class="ph" style="width:34%"></div></div></div>
+ <div class="cell">12<div class="bar"><div class="sl" style="width:33%"></div><div class="wk" style="width:30%"></div><div class="ph" style="width:37%"></div></div></div>
+ <div class="cell" style="outline:1px solid #888">13</div><div class="cell">14</div><div class="cell">15</div><div class="cell">16</div>
+</div>
+<div class="legend"><span class="sl">sleep</span><span class="wk">work</span><span class="ph">phone</span><span class="ex">exercise</span><span class="tr">travel</span><span class="ea">eating</span></div>
+</div>
+</div></div>
+
+</div>
